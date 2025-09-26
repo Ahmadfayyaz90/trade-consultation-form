@@ -63,12 +63,7 @@
             text-align: center;
             color: #333;
         }
-        .g-recaptcha {
-            margin-bottom: 15px;
-        }
     </style>
-    <!-- Google reCAPTCHA Script -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
@@ -521,10 +516,6 @@
             <label for="productInfo">Product Information <span style="color: red;">*</span>:</label>
             <textarea id="productInfo" name="productInfo" rows="5" required></textarea>
         </div>
-        <div class="form-group">
-            <label>Spam Prevention <span style="color: red;">*</span>:</label>
-            <div class="g-recaptcha" data-sitekey="6Lff9dUrAAAAAFZjxZYlKohf1X4ybq9_6VWja0j1"></div>
-        </div>
         <button type="submit" id="submitBtn" disabled>Submit</button>
     </form>
 
@@ -542,26 +533,20 @@
         const successMessage = document.getElementById('successMessage');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Function to toggle submit button based on form validity + reCAPTCHA
+        // Function to toggle submit button based on form validity
         function toggleSubmitButton() {
-            const isFormValid = form.checkValidity();
-            const recaptchaResponse = grecaptcha.getResponse();
-            submitBtn.disabled = !isFormValid || !recaptchaResponse;
+            submitBtn.disabled = !form.checkValidity();
         }
 
         // Listen for input changes to enable/disable submit button
         form.addEventListener('input', toggleSubmitButton);
 
-        // Listen for reCAPTCHA changes
-        window.addEventListener('recaptcha', toggleSubmitButton);
-
-        // Initial check on load (reCAPTCHA loads async)
-        setTimeout(toggleSubmitButton, 1000);
+        // Initial check on load
+        toggleSubmitButton();
 
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
             const targetCountry = document.getElementById('targetCountry').value;
-            const recaptchaResponse = grecaptcha.getResponse();
             const submitData = new FormData(form);
             const data = Object.fromEntries(submitData.entries());
 
@@ -569,14 +554,6 @@
             successMessage.style.display = 'none';
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing...';
-
-            if (!recaptchaResponse) {
-                errorMessage.textContent = 'Please complete the CAPTCHA verification.';
-                errorMessage.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit';
-                return;
-            }
 
             if (sanctionedCountries.includes(targetCountry)) {
                 errorMessage.textContent = 'We regret to inform you that, due to international sanctions, we are currently unable to provide services for the selected target country.';
@@ -611,25 +588,20 @@
 
                         <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Product Information</h2>
                         <p style="background-color: #fff; padding: 10px; border-left: 4px solid #007bff;">${data.productInfo.replace(/\n/g, '<br>')}</p>
-
-                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">reCAPTCHA Token (for manual verification):</h2>
-                        <p><strong>Token:</strong> ${recaptchaResponse}</p>
                     </div>
                 `;
 
                 // Send via EmailJS
                 const params = {
                     ...data,
-                    to_email: 'ahmad_z.fayaz@yahoo.com',
-                    message: htmlBody,  // This goes into {{message}} in your template
-                    recaptcha_token: recaptchaResponse  // Include token for your manual check
+                    to_email: 'ahmad_z.fayyaz@yahoo.com',
+                    message: htmlBody  // This goes into {{message}} in your template
                 };
 
                 await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-                successMessage.textContent = 'Your request has been submitted successfully! We'll be in touch soon.';
+                successMessage.textContent = 'Your request has been submitted successfully! We\'ll be in touch soon.';
                 successMessage.style.display = 'block';
                 form.reset();
-                grecaptcha.reset(); // Reset CAPTCHA
                 toggleSubmitButton(); // Re-disable after reset
             } catch (error) {
                 console.error('Error:', error);
