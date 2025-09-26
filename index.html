@@ -523,7 +523,7 @@
         </div>
         <div class="form-group">
             <label>Spam Prevention <span style="color: red;">*</span>:</label>
-            <div class="g-recaptcha" data-sitekey="6Lcu8tUrAAAAAGOM8E4fa37L_Ztr5p6ZhXvjHfGe"></div>
+            <div class="g-recaptcha" data-sitekey="6Lff9dUrAAAAAFZjxZYlKohf1X4ybq9_6VWja0j1"></div>
         </div>
         <button type="submit" id="submitBtn" disabled>Submit</button>
     </form>
@@ -620,13 +620,13 @@
                 // Send via EmailJS
                 const params = {
                     ...data,
-                    to_email: 'ahmad_z.fayyaz@yahoo.com',
+                    to_email: 'ahmad_z.fayaz@yahoo.com',
                     message: htmlBody,  // This goes into {{message}} in your template
                     recaptcha_token: recaptchaResponse  // Include token for your manual check
                 };
 
                 await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-                successMessage.textContent = 'Your request has been submitted successfully! We\'ll be in touch soon.';
+                successMessage.textContent = 'Your request has been submitted successfully! We'll be in touch soon.';
                 successMessage.style.display = 'block';
                 form.reset();
                 grecaptcha.reset(); // Reset CAPTCHA
@@ -643,6 +643,3 @@
     </script>
 </body>
 </html>
-
-
-
