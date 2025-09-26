@@ -36,7 +36,7 @@
             cursor: pointer;
             width: 100%;
         }
-        button:hover {
+        button:hover:not(:disabled) {
             background-color: #0056b3;
         }
         button:disabled {
@@ -66,32 +66,30 @@
     </style>
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <!-- jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <h1>Trade Linkage Consultation Request</h1>
     <div id="errorMessage" class="error"></div>
     <div id="successMessage" class="success"></div>
-    <form id="requestForm">
+    <form id="requestForm" novalidate>
         <div class="form-group">
-            <label for="name">Name:</label>
+            <label for="name">Name <span style="color: red;">*</span>:</label>
             <input type="text" id="name" name="name" required>
         </div>
         <div class="form-group">
-            <label for="surname">Surname:</label>
+            <label for="surname">Surname <span style="color: red;">*</span>:</label>
             <input type="text" id="surname" name="surname" required>
         </div>
         <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email">Email <span style="color: red;">*</span>:</label>
             <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="phone">Phone:</label>
+            <label for="phone">Phone <span style="color: red;">*</span>:</label>
             <input type="tel" id="phone" name="phone" required>
         </div>
         <div class="form-group">
-            <label for="residenceCountry">Residence Country:</label>
+            <label for="residenceCountry">Residence Country <span style="color: red;">*</span>:</label>
             <select id="residenceCountry" name="residenceCountry" required>
                 <option value="">Select your country</option>
                 <option value="Afghanistan">Afghanistan</option>
@@ -289,7 +287,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="industry">Industry of your product:</label>
+            <label for="industry">Industry of your product <span style="color: red;">*</span>:</label>
             <select id="industry" name="industry" required>
                 <option value="">Select industry</option>
                 <option value="Agriculture">Agriculture</option>
@@ -309,7 +307,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="tradeType">Trade Type:</label>
+            <label for="tradeType">Trade Type <span style="color: red;">*</span>:</label>
             <select id="tradeType" name="tradeType" required>
                 <option value="">Select type</option>
                 <option value="Import">Import</option>
@@ -317,7 +315,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="targetCountry">Target Country:</label>
+            <label for="targetCountry">Target Country <span style="color: red;">*</span>:</label>
             <select id="targetCountry" name="targetCountry" required>
                 <option value="">Select target country</option>
                 <option value="Afghanistan">Afghanistan</option>
@@ -515,10 +513,10 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="productInfo">Product Information:</label>
+            <label for="productInfo">Product Information <span style="color: red;">*</span>:</label>
             <textarea id="productInfo" name="productInfo" rows="5" required></textarea>
         </div>
-        <button type="submit" id="submitBtn">Submit</button>
+        <button type="submit" id="submitBtn" disabled>Submit</button>
     </form>
 
     <script>
@@ -534,6 +532,17 @@
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
         const submitBtn = document.getElementById('submitBtn');
+
+        // Function to toggle submit button based on form validity
+        function toggleSubmitButton() {
+            submitBtn.disabled = !form.checkValidity();
+        }
+
+        // Listen for input changes to enable/disable submit button
+        form.addEventListener('input', toggleSubmitButton);
+
+        // Initial check on load
+        toggleSubmitButton();
 
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -555,57 +564,45 @@
             }
 
             try {
-                // Generate PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF();
-                pdf.setFontSize(16);
-                pdf.text('Trade Linkage Consultation Request', 105, 20, { align: 'center' });
-                pdf.setFontSize(12);
-                pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, 40);
+                // Generate formatted HTML for email body
+                const date = new Date().toLocaleDateString();
+                const htmlBody = `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+                        <h1 style="text-align: center; color: #333;">Trade Linkage Consultation Request</h1>
+                        <p><strong>Date:</strong> ${date}</p>
 
-                // Personal Info Section
-                pdf.setFontSize(14);
-                pdf.text('Personal Information:', 20, 60);
-                pdf.setFontSize(10);
-                pdf.text(`Name: ${data.name} ${data.surname}`, 20, 70);
-                pdf.text(`Email: ${data.email}`, 20, 80);
-                pdf.text(`Phone: ${data.phone}`, 20, 90);
-                pdf.text(`Residence Country: ${data.residenceCountry}`, 20, 100);
+                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Personal Information</h2>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li><strong>Name:</strong> ${data.name} ${data.surname}</li>
+                            <li><strong>Email:</strong> ${data.email}</li>
+                            <li><strong>Phone:</strong> ${data.phone}</li>
+                            <li><strong>Residence Country:</strong> ${data.residenceCountry}</li>
+                        </ul>
 
-                // Trade Details Section
-                pdf.setFontSize(14);
-                pdf.text('Trade Details:', 20, 120);
-                pdf.setFontSize(10);
-                pdf.text(`Industry: ${data.industry}`, 20, 130);
-                pdf.text(`Trade Type: ${data.tradeType}`, 20, 140);
-                pdf.text(`Target Country: ${data.targetCountry}`, 20, 150);
+                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Trade Details</h2>
+                        <ul style="list-style-type: none; padding: 0;">
+                            <li><strong>Industry:</strong> ${data.industry}</li>
+                            <li><strong>Trade Type:</strong> ${data.tradeType}</li>
+                            <li><strong>Target Country:</strong> ${data.targetCountry}</li>
+                        </ul>
 
-                // Product Info Section
-                pdf.setFontSize(14);
-                pdf.text('Product Information:', 20, 170);
-                pdf.setFontSize(10);
-                const productLines = pdf.splitTextToSize(data.productInfo, 170);
-                pdf.text(productLines, 20, 180);
+                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Product Information</h2>
+                        <p style="background-color: #fff; padding: 10px; border-left: 4px solid #007bff;">${data.productInfo.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
 
-                // Convert to base64 for attachment
-                const pdfBlob = pdf.output('blob');
-                const reader = new FileReader();
-                reader.readAsDataURL(pdfBlob);
-                reader.onloadend = async () => {
-                    const base64data = reader.result.split(',')[1]; // Remove data:application/pdf;base64,
-
-                    // Send via EmailJS
-                    const params = {
-                        ...data,
-                        to_email: 'ahmad_z.fayaz@yahoo.com',
-                        attachment: [{ name: 'Request.pdf', data: base64data, type: 'application/pdf' }]
-                    };
-
-                    await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-                    successMessage.textContent = 'Your request has been submitted successfully! We\'ll be in touch soon.';
-                    successMessage.style.display = 'block';
-                    form.reset();
+                // Send via EmailJS
+                const params = {
+                    ...data,
+                    to_email: 'ahmad_z.fayaz@yahoo.com',
+                    message: htmlBody  // This goes into {{message}} in your template
                 };
+
+                await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
+                successMessage.textContent = 'Your request has been submitted successfully! We\'ll be in touch soon.';
+                successMessage.style.display = 'block';
+                form.reset();
+                toggleSubmitButton(); // Re-disable after reset
             } catch (error) {
                 console.error('Error:', error);
                 errorMessage.textContent = 'Sorry, there was an issue sending your request. Please try again.';
