@@ -39,6 +39,10 @@
         button:hover {
             background-color: #0056b3;
         }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
         .error {
             color: #dc3545;
             background-color: #f8d7da;
@@ -60,6 +64,10 @@
             color: #333;
         }
     </style>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <h1>Trade Linkage Consultation Request</h1>
@@ -510,36 +518,101 @@
             <label for="productInfo">Product Information:</label>
             <textarea id="productInfo" name="productInfo" rows="5" required></textarea>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" id="submitBtn">Submit</button>
     </form>
 
     <script>
-        const sanctionedCountries = ['Iran', 'Iraq', 'Yemen', 'Sudan', 'Libya'];
+        // EmailJS Init - REPLACE WITH YOUR VALUES
+        const PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // From EmailJS dashboard
+        const SERVICE_ID = 'YOUR_SERVICE_ID'; // e.g., 'service_def456' for Yahoo
+        const TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // e.g., 'template_abc123'
 
+        emailjs.init(PUBLIC_KEY);
+
+        const sanctionedCountries = ['Iran', 'Iraq', 'Yemen', 'Sudan', 'Libya'];
         const form = document.getElementById('requestForm');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
+        const submitBtn = document.getElementById('submitBtn');
 
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', async function(event) {
             event.preventDefault();
-
             const targetCountry = document.getElementById('targetCountry').value;
+            const submitData = new FormData(form);
+            const data = Object.fromEntries(submitData.entries());
 
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
 
             if (sanctionedCountries.includes(targetCountry)) {
                 errorMessage.textContent = 'We regret to inform you that, due to international sanctions, we are currently unable to provide services for the selected target country.';
                 errorMessage.style.display = 'block';
-            } else {
-                successMessage.textContent = 'Your request has been submitted successfully!';
-                successMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
+                return;
+            }
 
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData.entries());
-                console.log('Submitted data:', data);
+            try {
+                // Generate PDF
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                pdf.setFontSize(16);
+                pdf.text('Trade Linkage Consultation Request', 105, 20, { align: 'center' });
+                pdf.setFontSize(12);
+                pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, 40);
 
-                form.reset();
+                // Personal Info Section
+                pdf.setFontSize(14);
+                pdf.text('Personal Information:', 20, 60);
+                pdf.setFontSize(10);
+                pdf.text(`Name: ${data.name} ${data.surname}`, 20, 70);
+                pdf.text(`Email: ${data.email}`, 20, 80);
+                pdf.text(`Phone: ${data.phone}`, 20, 90);
+                pdf.text(`Residence Country: ${data.residenceCountry}`, 20, 100);
+
+                // Trade Details Section
+                pdf.setFontSize(14);
+                pdf.text('Trade Details:', 20, 120);
+                pdf.setFontSize(10);
+                pdf.text(`Industry: ${data.industry}`, 20, 130);
+                pdf.text(`Trade Type: ${data.tradeType}`, 20, 140);
+                pdf.text(`Target Country: ${data.targetCountry}`, 20, 150);
+
+                // Product Info Section
+                pdf.setFontSize(14);
+                pdf.text('Product Information:', 20, 170);
+                pdf.setFontSize(10);
+                const productLines = pdf.splitTextToSize(data.productInfo, 170);
+                pdf.text(productLines, 20, 180);
+
+                // Convert to base64 for attachment
+                const pdfBlob = pdf.output('blob');
+                const reader = new FileReader();
+                reader.readAsDataURL(pdfBlob);
+                reader.onloadend = async () => {
+                    const base64data = reader.result.split(',')[1]; // Remove data:application/pdf;base64,
+
+                    // Send via EmailJS
+                    const params = {
+                        ...data,
+                        to_email: 'ahmad_z.fayaz@yahoo.com',
+                        attachment: [{ name: 'Request.pdf', data: base64data, type: 'application/pdf' }]
+                    };
+
+                    await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
+                    successMessage.textContent = 'Your request has been submitted successfully! We\'ll be in touch soon.';
+                    successMessage.style.display = 'block';
+                    form.reset();
+                };
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = 'Sorry, there was an issue sending your request. Please try again.';
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit';
             }
         });
     </script>
