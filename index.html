@@ -86,7 +86,6 @@
             <label for="residenceCountry">Residence Country:</label>
             <select id="residenceCountry" name="residenceCountry" required>
                 <option value="">Select your country</option>
-                <!-- Sample countries; add more as needed -->
                 <option value="Afghanistan">Afghanistan</option>
                 <option value="Albania">Albania</option>
                 <option value="Algeria">Algeria</option>
@@ -299,7 +298,6 @@
                 <option value="Pharmaceuticals">Pharmaceuticals</option>
                 <option value="Textiles">Textiles</option>
                 <option value="Transportation">Transportation</option>
-                <!-- Add more industries as needed -->
             </select>
         </div>
         <div class="form-group">
@@ -314,7 +312,6 @@
             <label for="targetCountry">Target Country:</label>
             <select id="targetCountry" name="targetCountry" required>
                 <option value="">Select target country</option>
-                <!-- Using the same country list as residence; duplicate for simplicity -->
                 <option value="Afghanistan">Afghanistan</option>
                 <option value="Albania">Albania</option>
                 <option value="Algeria">Algeria</option>
@@ -535,8 +532,6 @@
                 errorMessage.textContent = 'We regret to inform you that, due to international sanctions, we are currently unable to provide services for the selected target country.';
                 errorMessage.style.display = 'block';
             } else {
-                // Here you would normally send the form data to a server
-                // For demo, show success and log data
                 successMessage.textContent = 'Your request has been submitted successfully!';
                 successMessage.style.display = 'block';
 
@@ -544,7 +539,6 @@
                 const data = Object.fromEntries(formData.entries());
                 console.log('Submitted data:', data);
 
-                // Optionally reset form
                 form.reset();
             }
         });
