@@ -520,10 +520,10 @@
     </form>
 
     <script>
-        // EmailJS Init - REPLACE WITH YOUR VALUES
-        const PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // From EmailJS dashboard
-        const SERVICE_ID = 'YOUR_SERVICE_ID'; // e.g., 'service_def456' for Yahoo
-        const TEMPLATE_ID = 'YOUR_TEMPLATE_ID'; // e.g., 'template_abc123'
+        // EmailJS Init - REPLACE THE REMAINING PLACEHOLDERS WITH YOUR ACTUAL VALUES
+        const PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // From EmailJS Account > API Keys (e.g., 'user_ghi789')
+        const SERVICE_ID = 'YOUR_SERVICE_ID'; // From your Yahoo Email Service (e.g., 'service_abc123')
+        const TEMPLATE_ID = 'template_bt4au6k'; // Your "Contact Us" template ID
 
         emailjs.init(PUBLIC_KEY);
 
@@ -591,11 +591,11 @@
                     </div>
                 `;
 
-                // Send via EmailJS
+                // Send via EmailJS - Emails will arrive at the 'to_email' address below
                 const params = {
                     ...data,
                     to_email: 'ahmad_z.fayaz@yahoo.com',
-                    message: htmlBody  // This goes into {{message}} in your template
+                    message: htmlBody  // This goes into {{message}} in your EmailJS template
                 };
 
                 await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
