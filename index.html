@@ -64,14 +64,17 @@
             color: #333;
         }
     </style>
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
     <h1>Trade Linkage Consultation Request</h1>
     <div id="errorMessage" class="error"></div>
     <div id="successMessage" class="success"></div>
-    <form id="requestForm" novalidate>
+    <form id="requestForm" action="https://api.web3forms.com/submit" method="POST" novalidate>
+        <!-- Hidden fields for Web3Forms -->
+        <input type="hidden" name="access_key" value="d2ff3980-fb6b-4525-8adb-1637aa5647b9"> <!-- Your actual access key inserted -->
+        <input type="hidden" name="subject" value="New Trade Linkage Consultation Request"> <!-- Custom subject -->
+        <input type="hidden" name="redirect" value="https://web3forms.com/success"> <!-- Redirect to their success page; change to your own if desired -->
+
         <div class="form-group">
             <label for="name">Name <span style="color: red;">*</span>:</label>
             <input type="text" id="name" name="name" required>
@@ -520,13 +523,6 @@
     </form>
 
     <script>
-        // EmailJS Init - REPLACE THE REMAINING PLACEHOLDERS WITH YOUR ACTUAL VALUES
-        const PUBLIC_KEY = 'YOUR_PUBLIC_KEY'; // From EmailJS Account > API Keys (e.g., 'user_ghi789')
-        const SERVICE_ID = 'YOUR_SERVICE_ID'; // From your Yahoo Email Service (e.g., 'service_abc123')
-        const TEMPLATE_ID = 'template_bt4au6k'; // Your "Contact Us" template ID
-
-        emailjs.init(PUBLIC_KEY);
-
         const sanctionedCountries = ['Iran', 'Iraq', 'Yemen', 'Sudan', 'Libya'];
         const form = document.getElementById('requestForm');
         const errorMessage = document.getElementById('errorMessage');
@@ -544,73 +540,23 @@
         // Initial check on load
         toggleSubmitButton();
 
-        form.addEventListener('submit', async function(event) {
-            event.preventDefault();
+        form.addEventListener('submit', function(event) {
             const targetCountry = document.getElementById('targetCountry').value;
-            const submitData = new FormData(form);
-            const data = Object.fromEntries(submitData.entries());
 
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Processing...';
 
             if (sanctionedCountries.includes(targetCountry)) {
+                event.preventDefault(); // Block submission
                 errorMessage.textContent = 'We regret to inform you that, due to international sanctions, we are currently unable to provide services for the selected target country.';
                 errorMessage.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit';
                 return;
             }
 
-            try {
-                // Generate formatted HTML for email body
-                const date = new Date().toLocaleDateString();
-                const htmlBody = `
-                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
-                        <h1 style="text-align: center; color: #333;">Trade Linkage Consultation Request</h1>
-                        <p><strong>Date:</strong> ${date}</p>
-
-                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Personal Information</h2>
-                        <ul style="list-style-type: none; padding: 0;">
-                            <li><strong>Name:</strong> ${data.name} ${data.surname}</li>
-                            <li><strong>Email:</strong> ${data.email}</li>
-                            <li><strong>Phone:</strong> ${data.phone}</li>
-                            <li><strong>Residence Country:</strong> ${data.residenceCountry}</li>
-                        </ul>
-
-                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Trade Details</h2>
-                        <ul style="list-style-type: none; padding: 0;">
-                            <li><strong>Industry:</strong> ${data.industry}</li>
-                            <li><strong>Trade Type:</strong> ${data.tradeType}</li>
-                            <li><strong>Target Country:</strong> ${data.targetCountry}</li>
-                        </ul>
-
-                        <h2 style="color: #007bff; border-bottom: 2px solid #007bff; padding-bottom: 5px;">Product Information</h2>
-                        <p style="background-color: #fff; padding: 10px; border-left: 4px solid #007bff;">${data.productInfo.replace(/\n/g, '<br>')}</p>
-                    </div>
-                `;
-
-                // Send via EmailJS - Emails will arrive at the 'to_email' address below
-                const params = {
-                    ...data,
-                    to_email: 'ahmad_z.fayaz@yahoo.com',
-                    message: htmlBody  // This goes into {{message}} in your EmailJS template
-                };
-
-                await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-                successMessage.textContent = 'Your request has been submitted successfully! We\'ll be in touch soon.';
-                successMessage.style.display = 'block';
-                form.reset();
-                toggleSubmitButton(); // Re-disable after reset
-            } catch (error) {
-                console.error('Error:', error);
-                errorMessage.textContent = 'Sorry, there was an issue sending your request. Please try again.';
-                errorMessage.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit';
-            }
+            // For non-sanctioned: Let the form submit normally to Web3Forms
+            // Optional: Add loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
         });
     </script>
 </body>
