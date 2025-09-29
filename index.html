@@ -50,7 +50,7 @@
             background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%);
         }
 
-        .scene-3 {
+        .scene-3, .scene-3-5 {
             background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
         }
 
@@ -379,26 +379,50 @@
             <p>We connect businesses across industries with cutting-edge trade solutions, combining <span class="highlight">professional research</span> and <span class="highlight">strategic expertise</span> to drive your success in international markets.</p>
         </div>
 
-        <!-- Scene 3: Industries -->
+        <!-- Scene 3: Industries Part 1 -->
         <div class="scene scene-3" id="scene3">
             <div class="particles" id="particles3"></div>
-            <h2>Our Specializations</h2>
+            <h2>Climate Solutions & Decarbonization</h2>
             <div class="industries">
                 <div class="industry-card">
-                    <h3>🌱 Carbon Capture & Utilization</h3>
-                    <p>Leading the future of sustainability</p>
+                    <h3> Carbon Capture & Credits</h3>
+                    <p>Full-cycle carbon management from capture to monetization</p>
                 </div>
                 <div class="industry-card">
-                    <h3>💚 Carbon Credits</h3>
-                    <p>Maximize your environmental impact</p>
+                    <h3> Corporate Net-Zero Strategy</h3>
+                    <p>Navigate your renewable transition with expert guidance</p>
                 </div>
                 <div class="industry-card">
-                    <h3>⚡ Renewable Energies</h3>
-                    <p>Power the sustainable revolution</p>
+                    <h3> Solar PV & Energy Storage</h3>
+                    <p>Hybrid systems for 24/7 clean power generation</p>
                 </div>
                 <div class="industry-card">
-                    <h3>💧 Atmospheric Water Generation</h3>
-                    <p>Innovation in water technology</p>
+                    <h3> Atmospheric Water Generation</h3>
+                    <p>Sustainable water from air technology</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3.5: Industries Part 2 -->
+        <div class="scene scene-3-5" id="scene3-5">
+            <div class="particles" id="particles3-5"></div>
+            <h2>Future Energy Infrastructure</h2>
+            <div class="industries">
+                <div class="industry-card">
+                    <h3> Green Hydrogen Solutions</h3>
+                    <p>Feasibility studies & seamless integration strategies</p>
+                </div>
+                <div class="industry-card">
+                    <h3> EV Charging Networks</h3>
+                    <p>Smart grid integration for electric mobility</p>
+                </div>
+                <div class="industry-card">
+                    <h3> Smart Grid Technology</h3>
+                    <p>Intelligent energy distribution systems</p>
+                </div>
+                <div class="industry-card">
+                    <h3> Integrated Renewable Systems</h3>
+                    <p>End-to-end sustainable energy ecosystems</p>
                 </div>
             </div>
         </div>
@@ -735,7 +759,7 @@
                             <option value="Egypt">Egypt</option>
                             <option value="El Salvador">El Salvador</option>
                             <option value="Equatorial Guinea">Equatorial Guinea</option>
-                            <option value="Eritria">Eritrea</option>
+                            <option value="Eritrea">Eritrea</option>
                             <option value="Estonia">Estonia</option>
                             <option value="Eswatini">Eswatini</option>
                             <option value="Ethiopia">Ethiopia</option>
@@ -889,7 +913,7 @@
 
     <script>
         let currentScene = 1;
-        const totalScenes = 5;
+        const totalScenes = 6;
         const sceneDuration = 4000;
 
         function createParticles(containerId) {
@@ -906,16 +930,19 @@
         }
 
         for (let i = 1; i <= totalScenes; i++) {
-            createParticles('particles' + i);
+            const particleId = i === 4 ? 'particles3-5' : 'particles' + (i > 3 ? i - 1 : i);
+            createParticles(particleId);
         }
 
         function showNextScene() {
-            document.getElementById('scene' + currentScene).classList.remove('active');
+            const sceneId = currentScene === 4 ? 'scene3-5' : 'scene' + (currentScene > 3 ? currentScene - 1 : currentScene);
+            document.getElementById(sceneId).classList.remove('active');
             currentScene++;
             if (currentScene > totalScenes) {
                 currentScene = 1;
             }
-            document.getElementById('scene' + currentScene).classList.add('active');
+            const nextSceneId = currentScene === 4 ? 'scene3-5' : 'scene' + (currentScene > 3 ? currentScene - 1 : currentScene);
+            document.getElementById(nextSceneId).classList.add('active');
         }
 
         setInterval(showNextScene, sceneDuration);
