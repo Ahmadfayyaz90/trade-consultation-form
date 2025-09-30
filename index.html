@@ -160,8 +160,8 @@
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(0,212,255,0.3);
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 30px;
             transform: translateY(50px);
             opacity: 0;
             animation: cardSlide 0.8s ease-out forwards;
@@ -187,8 +187,8 @@
 
         .industry-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,212,255,0.2);
-            border-color: rgba(0,212,255,0.5);
+            box-shadow: 0 15px 40px rgba(0,212,255,0.3);
+            border-color: rgba(0,212,255,0.6);
         }
 
         .industry-card:nth-child(1) { animation-delay: 0.2s; }
@@ -198,9 +198,41 @@
 
         .industry-card h3 {
             color: #00d4ff;
-            font-size: 1.4em;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            margin-bottom: 15px;
             letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(0,212,255,0.5);
+            animation: titleGlow 2s infinite alternate ease-in-out;
+            position: relative;
+        }
+
+        .industry-card h3::before {
+            content: '⚡';
+            margin-right: 10px;
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+
+        .industry-card p {
+            color: #f0f0f0;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        @keyframes titleGlow {
+            from {
+                text-shadow: 0 0 5px rgba(0,212,255,0.3), 0 0 10px rgba(0,212,255,0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0,212,255,0.7), 0 0 20px rgba(0,212,255,0.5);
+            }
+        }
+
+        @keyframes cardSlide {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .cta-button {
@@ -271,13 +303,6 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-
-        @keyframes cardSlide {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         @keyframes fancyPulse {
@@ -478,7 +503,20 @@
             .value-list li::before { 
                 font-size: 2em; 
             }
-            .industries { grid-template-columns: 1fr; }
+            .industries { 
+                grid-template-columns: 1fr; 
+                gap: 15px;
+            }
+            .industry-card { 
+                padding: 25px; 
+                border-radius: 15px;
+            }
+            .industry-card h3 { 
+                font-size: 1.6em; 
+            }
+            .industry-card p { 
+                font-size: 1em; 
+            }
             .cta-button { font-size: 1.2em; padding: 12px 30px; }
             .modal-content { width: 95%; margin: 2% auto; }
             .form-container h1 { font-size: 1.5em; }
@@ -509,19 +547,19 @@
             <h2>Climate Solutions & Decarbonization</h2>
             <div class="industries">
                 <div class="industry-card">
-                    <h3> Carbon Capture & Credits</h3>
+                    <h3>Carbon Capture & Credits</h3>
                     <p>Full-cycle carbon management from capture to monetization</p>
                 </div>
                 <div class="industry-card">
-                    <h3> Corporate Net-Zero Strategy</h3>
+                    <h3>Corporate Net-Zero Strategy</h3>
                     <p>Navigate your renewable transition with expert guidance</p>
                 </div>
                 <div class="industry-card">
-                    <h3> Solar PV & Energy Storage</h3>
+                    <h3>Solar PV & Energy Storage</h3>
                     <p>Hybrid systems for 24/7 clean power generation</p>
                 </div>
                 <div class="industry-card">
-                    <h3> Atmospheric Water Generation</h3>
+                    <h3>Atmospheric Water Generation</h3>
                     <p>Sustainable water from air technology</p>
                 </div>
             </div>
@@ -533,19 +571,19 @@
             <h2>Future Energy Infrastructure</h2>
             <div class="industries">
                 <div class="industry-card">
-                    <h3> Green Hydrogen Solutions</h3>
+                    <h3>Green Hydrogen Solutions</h3>
                     <p>Feasibility studies & seamless integration strategies</p>
                 </div>
                 <div class="industry-card">
-                    <h3> EV Charging Networks</h3>
+                    <h3>EV Charging Networks</h3>
                     <p>Smart grid integration for electric mobility</p>
                 </div>
                 <div class="industry-card">
-                    <h3> Smart Grid Technology</h3>
+                    <h3>Smart Grid Technology</h3>
                     <p>Intelligent energy distribution systems</p>
                 </div>
                 <div class="industry-card">
-                    <h3> Integrated Renewable Systems</h3>
+                    <h3>Integrated Renewable Systems</h3>
                     <p>End-to-end sustainable energy ecosystems</p>
                 </div>
             </div>
@@ -659,7 +697,7 @@
                             <option value="Egypt">Egypt</option>
                             <option value="El Salvador">El Salvador</option>
                             <option value="Equatorial Guinea">Equatorial Guinea</option>
-                            <option value="Eritria">Eritrea</option>
+                            <option value="Eritrea">Eritrea</option>
                             <option value="Estonia">Estonia</option>
                             <option value="Eswatini">Eswatini</option>
                             <option value="Ethiopia">Ethiopia</option>
