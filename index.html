@@ -50,7 +50,7 @@
             background: linear-gradient(135deg, #0f3460 0%, #16213e 50%, #1a1a2e 100%);
         }
 
-        .scene-3, .scene-3-5 {
+        .scene-3, .scene-3a, .scene-3b, .scene-3c {
             background: linear-gradient(135deg, #16213e 0%, #0f3460 50%, #533483 100%);
         }
 
@@ -151,7 +151,7 @@
         .industries {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 30px;
             max-width: 900px;
             margin-top: 30px;
         }
@@ -160,7 +160,7 @@
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(0,212,255,0.3);
-            border-radius: 20px;
+            border-radius: 30px;
             padding: 30px;
             transform: translateY(50px);
             opacity: 0;
@@ -193,8 +193,6 @@
 
         .industry-card:nth-child(1) { animation-delay: 0.2s; }
         .industry-card:nth-child(2) { animation-delay: 0.4s; }
-        .industry-card:nth-child(3) { animation-delay: 0.6s; }
-        .industry-card:nth-child(4) { animation-delay: 0.8s; }
 
         .industry-card h3 {
             color: #00d4ff;
@@ -505,11 +503,11 @@
             }
             .industries { 
                 grid-template-columns: 1fr; 
-                gap: 15px;
+                gap: 20px;
             }
             .industry-card { 
                 padding: 25px; 
-                border-radius: 15px;
+                border-radius: 25px;
             }
             .industry-card h3 { 
                 font-size: 1.6em; 
@@ -541,7 +539,7 @@
             <p>We connect businesses across industries with cutting-edge trade solutions, combining <span class="highlight">professional research</span> and <span class="highlight">strategic expertise</span> to drive your success in international markets.</p>
         </div>
 
-        <!-- Scene 3: Industries Part 1 -->
+        <!-- Scene 3: Industries Part 1a -->
         <div class="scene scene-3" id="scene3">
             <div class="particles" id="particles3"></div>
             <h2>Climate Solutions & Decarbonization</h2>
@@ -554,6 +552,14 @@
                     <h3>Corporate Net-Zero Strategy</h3>
                     <p>Navigate your renewable transition with expert guidance</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Scene 3a: Industries Part 1b -->
+        <div class="scene scene-3" id="scene3a">
+            <div class="particles" id="particles3a"></div>
+            <h2>Climate Solutions & Decarbonization</h2>
+            <div class="industries">
                 <div class="industry-card">
                     <h3>Solar PV & Energy Storage</h3>
                     <p>Hybrid systems for 24/7 clean power generation</p>
@@ -565,9 +571,9 @@
             </div>
         </div>
 
-        <!-- Scene 3.5: Industries Part 2 -->
-        <div class="scene scene-3-5" id="scene3-5">
-            <div class="particles" id="particles3-5"></div>
+        <!-- Scene 3b: Industries Part 2a -->
+        <div class="scene scene-3" id="scene3b">
+            <div class="particles" id="particles3b"></div>
             <h2>Future Energy Infrastructure</h2>
             <div class="industries">
                 <div class="industry-card">
@@ -578,6 +584,14 @@
                     <h3>EV Charging Networks</h3>
                     <p>Smart grid integration for electric mobility</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Scene 3c: Industries Part 2b -->
+        <div class="scene scene-3" id="scene3c">
+            <div class="particles" id="particles3c"></div>
+            <h2>Future Energy Infrastructure</h2>
+            <div class="industries">
                 <div class="industry-card">
                     <h3>Smart Grid Technology</h3>
                     <p>Intelligent energy distribution systems</p>
@@ -1077,8 +1091,36 @@
 
     <script>
         let currentScene = 1;
-        const totalScenes = 6;
+        const totalScenes = 8;
         const sceneDuration = 8000;
+
+        function getSceneId(num) {
+            switch(num) {
+                case 1: return 'scene1';
+                case 2: return 'scene2';
+                case 3: return 'scene3';
+                case 4: return 'scene3a';
+                case 5: return 'scene3b';
+                case 6: return 'scene3c';
+                case 7: return 'scene4';
+                case 8: return 'scene5';
+                default: return 'scene1';
+            }
+        }
+
+        function getParticleId(num) {
+            switch(num) {
+                case 1: return 'particles1';
+                case 2: return 'particles2';
+                case 3: return 'particles3';
+                case 4: return 'particles3a';
+                case 5: return 'particles3b';
+                case 6: return 'particles3c';
+                case 7: return 'particles4';
+                case 8: return 'particles5';
+                default: return 'particles1';
+            }
+        }
 
         function createParticles(containerId) {
             const container = document.getElementById(containerId);
@@ -1094,18 +1136,18 @@
         }
 
         for (let i = 1; i <= totalScenes; i++) {
-            const particleId = i === 4 ? 'particles3-5' : 'particles' + (i > 3 ? i - 1 : i);
+            const particleId = getParticleId(i);
             createParticles(particleId);
         }
 
         function showNextScene() {
-            const sceneId = currentScene === 4 ? 'scene3-5' : 'scene' + (currentScene > 3 ? currentScene - 1 : currentScene);
+            const sceneId = getSceneId(currentScene);
             document.getElementById(sceneId).classList.remove('active');
             currentScene++;
             if (currentScene > totalScenes) {
                 currentScene = 1;
             }
-            const nextSceneId = currentScene === 4 ? 'scene3-5' : 'scene' + (currentScene > 3 ? currentScene - 1 : currentScene);
+            const nextSceneId = getSceneId(currentScene);
             document.getElementById(nextSceneId).classList.add('active');
         }
 
