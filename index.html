@@ -94,6 +94,60 @@
             font-weight: bold;
         }
 
+        .value-list {
+            list-style: none;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .value-list li {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            color: #e0e0e0;
+            line-height: 1.6;
+            animation: fadeInUp 1.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .value-list li:nth-child(1) { animation-delay: 0.2s; }
+        .value-list li:nth-child(2) { animation-delay: 0.4s; }
+        .value-list li:nth-child(3) { animation-delay: 0.6s; }
+        .value-list li:nth-child(4) { animation-delay: 0.8s; }
+
+        .value-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #00d4ff;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-shadow: 0 0 15px #00d4ff, 0 0 25px #00d4ff;
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                text-shadow: 0 0 15px #00d4ff, 0 0 25px #00d4ff;
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 20px #00d4ff, 0 0 35px #00d4ff;
+                transform: scale(1.1);
+            }
+        }
+
         .industries {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -416,6 +470,14 @@
             h1 { font-size: 2em; }
             h2 { font-size: 1.8em; }
             p { font-size: 1.1em; }
+            .value-list li { 
+                font-size: 1.2em; 
+                padding-left: 40px; 
+                margin-bottom: 20px; 
+            }
+            .value-list li::before { 
+                font-size: 2em; 
+            }
             .industries { grid-template-columns: 1fr; }
             .cta-button { font-size: 1.2em; padding: 12px 30px; }
             .modal-content { width: 95%; margin: 2% auto; }
@@ -493,10 +555,12 @@
         <div class="scene scene-4" id="scene4">
             <div class="particles" id="particles4"></div>
             <h2>Why Choose Us?</h2>
-            <p>✓ <span class="highlight">Professional Research</span> backed by industry expertise</p>
-            <p>✓ <span class="highlight">Multi-Industry Experience</span> across diverse sectors</p>
-            <p>✓ <span class="highlight">Dubai-Based</span> with global connections</p>
-            <p>✓ <span class="highlight">Results-Driven</span> consultation strategies</p>
+            <ul class="value-list">
+                <li><span class="highlight">Professional Research</span> backed by industry expertise</li>
+                <li><span class="highlight">Multi-Industry Experience</span> across diverse sectors</li>
+                <li><span class="highlight">Dubai-Based</span> with global connections</li>
+                <li><span class="highlight">Results-Driven</span> consultation strategies</li>
+            </ul>
         </div>
 
         <!-- Scene 5: CTA -->
@@ -595,7 +659,7 @@
                             <option value="Egypt">Egypt</option>
                             <option value="El Salvador">El Salvador</option>
                             <option value="Equatorial Guinea">Equatorial Guinea</option>
-                            <option value="Eritrea">Eritrea</option>
+                            <option value="Eritria">Eritrea</option>
                             <option value="Estonia">Estonia</option>
                             <option value="Eswatini">Eswatini</option>
                             <option value="Ethiopia">Ethiopia</option>
